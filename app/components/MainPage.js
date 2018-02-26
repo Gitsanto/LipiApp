@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { AppRegistry, StyleSheet, Text, View } from "react-native";
 //import { StackNavigator } from "react-navigation";
-export default class Boiler extends Component {
+export default class MainPage extends Component {
   static navigationOptions = {
     headerStyle: {
       backgroundColor: "#16a085",
@@ -16,4 +16,4 @@ export default class Boiler extends Component {
 
 const styles = StyleSheet.create({});
 
-AppRegistry.registerComponent("Boiler", () => Boiler);
+AppRegistry.registerComponent("MainPage", () => MainPage);
