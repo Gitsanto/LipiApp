@@ -20,7 +20,7 @@ import { StackNavigator } from "react-navigation";
 const { width, height } = Dimensions.get("window");
 
 import Button from "./Button";
-import Boiler from "./Boiler";
+import MainPage from "./MainPage";
 
 export default class OnboardingScreens extends Component {
   static navigationOptions = {
@@ -257,7 +257,7 @@ export default class OnboardingScreens extends Component {
           // TODO: Add a handler that would send a user to your app after onboarding is complete
           <Button
             text="Start Now"
-            onPress={() => this.props.navigation.navigate("Boiler")}
+            onPress={() => this.props.navigation.navigate("MainPage")}
           />
         ) : (
           // Or this one otherwise
