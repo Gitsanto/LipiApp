@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   // Header styles
   header: {
     color: "#FFFFFF",
-    fontFamily: "Avenir",
+    
     fontSize: 30,
     fontWeight: "bold",
     marginVertical: 15
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   // Text below header
   text: {
     color: "#FFFFFF",
-    fontFamily: "Avenir",
+    
     fontSize: 18,
     marginHorizontal: 40,
     textAlign: "center"
