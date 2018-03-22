@@ -12,6 +12,11 @@ import Screen from "./app/components/Screen";
 import Swiper from "./app/components/Swiper";
 import MainPage from "./app/components/MainPage";
 
+import quizView from "./app/components/View/quizView";
+import list from "./app/components/list";
+import setting from "./app/components/setting";
+import Stage from "./app/components/Stage";
+
 /*const instructions = Platform.select({
   ios: "Press Cmd+R to reload,\n" + "Cmd+D or shake for dev menu",
   android:
@@ -27,10 +32,41 @@ class Home extends Component<{}> {
     },
     header: null
   };
+   _loadResourcesAsync = () => {
+    return Promise.all([
+      this._loadAssetsAsync(),
+      
+    ])
+  }
+//hiding statusBar
+componentDidMount() {
+  StatusBar.setHidden(true);
+}
+  
+  _loadAssetsAsync = async () => {
+    return Promise.all([
+      
+      Asset.fromModule(require('./assets/icon.png')).downloadAsync(),
+     
+    ]);
+  };
+
   render() {
+    if (!this.state.fontLoaded) {
+      return (
+        <AppLoading
+          startAsync={this._loadResourcesAsync}
+          onError={console.error}
+          onFinish={() => {
+            this.setState({ fontLoaded: true });
+          }}
+        />
+      );
+    }
     return (
       <View style={styles.container}>
-        <StatusBar barStyle="light-content" backgroundColor="#16a085" />
+             {/*<StatusBar barStyle="light-content" backgroundColor="#16a085" />*/}
+
         <Screen navigation={this.props.navigation} />
       </View>
     );
@@ -61,7 +97,32 @@ export default App = StackNavigator({
     navigationOptions: {
       title: "MainPage"
     }
-  }
+  },
+   quizView: {
+    screen: quizView,
+    navigationOptions: {
+      title: "quizView"
+    }
+  },
+  
+  list: {
+    screen: list,
+    navigationOptions: {
+      title: "list"
+    }
+  },
+  setting: {
+    screen: setting,
+    navigationOptions: {
+      title: "setting"
+    }
+  },
+  Stage: {
+    screen: Stage,
+    navigationOptions: {
+      title: "Stage"
+    }
+  },
 });
 
 const styles = StyleSheet.create({
