@@ -3,11 +3,13 @@ import {
   AppRegistry,
   StyleSheet, // CSS-like styles
   Text, // Renders text
-  View // Container component
+  View, // Container component
+  Image
 } from "react-native";
 
 import Icon from "react-native-vector-icons/Ionicons";
 import { StackNavigator } from "react-navigation";
+import * as Animatable from 'react-native-animatable';
 
 import Swiper from "./Swiper";
 
@@ -17,22 +19,45 @@ export default class Screen extends Component {
       <Swiper navigation={this.props.navigation}>
         {/* First screen */}
         <View style={styles.slide}>
-          <Icon name="ios-home" {...iconStyles} />
-          <Text style={styles.header}>one</Text>
-          <Text style={styles.text}>one</Text>
+       
+      
+        <Image source={require('../../assets/img/li.png')}
+            style={{flexDirection:'row',alignSelf: 'flex-start',position:'absolute'
+                        }} 
+        
+        />
+        <View style={styles.mountainView}>           
+          <Image source={require('../../assets/img/lipiBackground.png')} style={{width: null,
+                height: null,flex:1, resizeMode: 'cover', zIndex:2 }} />
+         </View>
+       
         </View>
         {/* Second screen */}
         <View style={styles.slide}>
-          <Icon name="ios-people" {...iconStyles} />
-          <Text style={styles.header}>two</Text>
-          <Text style={styles.text}>two</Text>
+
+        <Image
+          source={require('../../assets/img/pi.png')}
+          style={{flexDirection:'row',
+                   alignSelf: 'flex-end',
+                   marginTop:-50,
+                   marginRight:10,
+                   position:'absolute'
+                        }} 
+        />
+
+        <View style={styles.mountainView}>    
+        
+          <Image source={require('../../assets/img/lipiBackground.png')} style={{width: null,
+                height: null,flex:1, resizeMode: 'cover',zIndex:2   }} />
+         </View>
+        
         </View>
-        {/* Third screen */}
+        {/* Third screen 
         <View style={styles.slide}>
           <Icon name="ios-videocam" {...iconStyles} />
           <Text style={styles.header}>three</Text>
           <Text style={styles.text}>three</Text>
-        </View>
+        </View>*/}
       </Swiper>
     );
   }
@@ -45,9 +70,8 @@ const styles = StyleSheet.create({
   // Slide styles
   slide: {
     flex: 1, // Take up all screen
-    justifyContent: "center", // Center vertically
-    alignItems: "center", // Center horizontally
-    backgroundColor: "#16a085"
+    
+    backgroundColor: "#00bcd4"
   },
   // Header styles
   header: {
@@ -64,6 +88,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginHorizontal: 40,
     textAlign: "center"
-  }
+  },
+  mountainView:{
+    flex:1,
+  }  
 });
 AppRegistry.registerComponent("Screen", () => Screen);
