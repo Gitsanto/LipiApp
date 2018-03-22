@@ -6,12 +6,15 @@ import {
   View,
   Button,
   Dimensions,
-  ScrollView,
+  StatusBar,
+  Image,
   TouchableOpacity
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Animbutton from './animbutton'
 import jsonData from './Files/jsonData.json'
+
+
 
 const { width, height } = Dimensions.get('window')
 let arrnew = []
@@ -28,10 +31,28 @@ export default class Quiz extends Component {
       question : arrnew[this.qno].question,
       options : arrnew[this.qno].options,
       correctoption : arrnew[this.qno].correctoption,
-      countCheck : 0
+      countCheck : 0,
+      
+      isHidden:false,
+      myReslt:'',
+      
+      
     }
+    obj = new Animbutton; 
+    
+    this._popView= this._popView.bind(this);
 
   }
+
+//hiding statusBar
+componentDidMount() {
+  StatusBar.setHidden(true);
+  // this.setState({isHidden: false})
+}
+// componentWillUnmount(){
+//   this.setState({isHidden: true})
+// }
+
   prev(){
     if(this.qno > 0){
       this.qno--
@@ -65,31 +86,80 @@ export default class Quiz extends Component {
       }
 
   }
+
+  _popView(stat,myAns){
+
+   this.setState({ isHidden: stat});
+   
+   if(myAns == this.state.correctoption ){
+    this.setState({myReslt : "true"})
+  }else{
+    this.setState({myReslt : "wrong"})
+  }
+  
+  }
+
+  _changeStat(){
+    obj._onChange();
+  }
+  
+
+
   render() {
     let _this = this
-    const currentOptions = this.state.options
+    const currentOptions = this.state.options;
+
     const options = Object.keys(currentOptions).map( function(k) {
-      return (  <View key={k} style={{margin:10}}>
-
-        <Animbutton countCheck={_this.state.countCheck} onColor={"green"} effect={"tada"} _onPress={(status) => _this._answer(status,k)} text={currentOptions[k]} />
-
-      </View>)
+      return (  
+        
+           <View key={k} style={{margin:10}}>
+           
+              <Animbutton isHidden={(stat)=>_this._popView(stat,k)} countCheck={_this.state.countCheck} onColor={"green"} effect={"tada"} _onPress={(status) => _this._answer(status,k)} text={currentOptions[k]} />
+            
+          </View> 
+      
+      
+      )
     });
-
+    
     return (
-      <ScrollView style={{backgroundColor: '#F5FCFF',paddingTop: 10}}>
+     
       <View style={styles.container}>
-
-      <View style={{ flex: 1,flexDirection: 'column', justifyContent: "space-between", alignItems: 'center',}}>
-
-      <View style={styles.oval} >
-        <Text style={styles.welcome}>
+      <View style={styles.ques} >
+        <Text style={styles.quesText}>{/*question*/}
           {this.state.question}
         </Text>
-     </View>
-        <View>
-        { options }
         </View>
+        
+        <View style={{flexDirection:"column", justifyContent:'center',}}>
+           <View style={{flexDirection:"row", }}>
+             <View >{/*for answers1*/}
+               { options [0]}
+              </View>
+             <View >{/*for answers2*/}
+                { options [1]}
+             </View>
+            </View>
+            <View style={{flexDirection:"row",}}>
+            <View >{/*for answers3*/}
+             { options [2]}
+            </View>
+            <View >{/*for answers4*/}
+             { options [3]}
+            </View></View>
+           
+           </View>
+            {this.state.isHidden ? 
+          <View style = { styles.buttonContainer }>
+          <TouchableOpacity  onPress={() => {this.next();this.setState({ isHidden: false}); this._changeStat} }>        
+                 <Image source={require('../../assets/img/playButton.png')} style={styles.buttonItem} />
+                 <Text style={{color:"white",fontSize: 50 }}>{this.state.myReslt}</Text>
+          </TouchableOpacity>
+          </View>
+            
+             : null}
+          
+       
         <View style={{flexDirection:"row"}}>
       {/*   <Button
           onPress={() => this.prev()}
@@ -97,40 +167,71 @@ export default class Quiz extends Component {
           color="#841584"
         />
         <View style={{margin:15}} />*/}
-
-        <TouchableOpacity onPress={() => this.next()} >
-          <View style={{paddingTop: 5,paddingBottom: 5, paddingRight: 20, paddingLeft: 20, borderRadius:10, backgroundColor:"green"}}>
-            <Icon name="md-arrow-round-forward" size={30} color="white" />
-          </View>
-        </TouchableOpacity >
-
+        
+        
+        {/* for toggling*/}   
+    
+        
         </View>
-        </View>
+        
       </View>
-      </ScrollView>
+   
     );
   }
 }
 
 const styles = StyleSheet.create({
 
-  oval: {
-  width: width * 90/100,
-  borderRadius: 20,
-  backgroundColor: 'green'
-  },
-  container: {
+  container:{
+    height:height,
+    width:width,
     flex: 1,
-    alignItems: 'center'
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: 'space-between',
+    backgroundColor:"#6f1e1e",
+    padding: 10,
+   
+
   },
-  welcome: {
+  
+  
+  ques: {
+   
+    flexDirection: 'column',
+    borderRadius: 20,
+    width:width/3,
+    height:height/3,
+    backgroundColor: 'grey',
+    justifyContent:'center',
+    alignItems: 'center',
+    paddingLeft: 20,
+
+  },
+  quesText: {
     fontSize: 20,
     margin: 15,
     color: "white"
+    
   },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+  
+
+  buttonContainer: {
+    flex: 1,
+    width:width,
+    height:height,
+    position: 'absolute',
+    justifyContent: 'center',
+   
+
+    zIndex:2,
+    alignItems: 'center',
+    backgroundColor:'rgba(52, 52, 52, 0.8)'
+    
+ },
+ buttonItem:{ 
+  width:200,
+  height:100,
+
+},
 });
