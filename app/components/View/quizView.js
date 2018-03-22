@@ -4,7 +4,7 @@ import React, { Component } from "react";
 import { AppRegistry, StyleSheet, Text, View,
       StatusBar,
       TouchableOpacity,
-
+      Button
          } from "react-native";
 //import { StackNavigator } from "react-navigation";
 
@@ -58,28 +58,27 @@ export default class quizView extends Component {
   }
 
   static navigationOptions = {
-    headerStyle: {
-      backgroundColor: "#16a085",
-      elevation: null
-    },
-    headerLeft: null
+    header: null
   };
+
+ 
   render() {
     return (
       <View style={{flex:1}}>
-      <StatusBar barStyle="light-content"/>
-      <View style={styles.toolbar}>
+      {/*<StatusBar barStyle="light-content"/>*/}
+      {/* <View style={styles.toolbar}>
                     <TouchableOpacity onPress={() => this._onPressBack() }>
                            <Text style={styles.toolbarButton}>Back</Text>
                     </TouchableOpacity>
                     <Text style={styles.toolbarTitle}></Text>
                     <Text style={styles.toolbarButton}></Text>
-      </View>
+      </View> */}
  
        { this.state.quizFinish ? <View style={styles.container}>
            <View style={styles.circle}>
  
              { this._scoreMessage(this.state.score) }
+             <Button title="go back" onPress={() => this._onPressBack()} color="white"></Button>
            </View>
  
        </View> :  <Quiz quizFinish={(score) => this._quizFinish(score)} /> }
