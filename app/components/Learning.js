@@ -1,7 +1,6 @@
 /**
  * @flow
  */
-
 import React from 'react';
 import {
   Dimensions,
@@ -14,7 +13,7 @@ import {
 } from 'react-native';
 import { Asset, Audio, Font, Video } from 'expo';
 
-
+import DataContain from "./MyData";
 
 class Icon {
   constructor(module, width, height) {
@@ -25,35 +24,56 @@ class Icon {
   }
 }
 
-class PlaylistItem {
-  constructor(name,fontpic, pic, uril, isVideo) {
-    this.name = name;
-    this.fontpic = fontpic;
-    this.pic = pic;
-    this.uril = uril;
-    this.isVideo = isVideo;
-  }
-}
+// class PlaylistItem {
+//   constructor(name,fontpic, pic, uril, isVideo) {
+//     this.name = name;
+//     this.fontpic = fontpic;
+//     this.pic = pic;
+//     this.uril = uril;
+//     this.isVideo = isVideo;
+//   }
+// }
 
-const PLAYLIST = [
-  new PlaylistItem(
-    'Ka',
-    require('../../assets/img/letter/1.png'),
-    require('../../assets/img/kaxuwa.png'),
-    require('../../assets/sounds/1.m4a'),
-    false
-  ),
+// const PLAYLIST = [
+//   new PlaylistItem(
+//     'Ka',
+//     require('../../assets/img/letter/1.png'),
+//     require('../../assets/img/character/kaxhuwa.png'),
+//     require('../../assets/sounds/words/Ka.m4a'),  
+//     false
+//   ),
 
-  new PlaylistItem(
-    'Kha',
-    require('../../assets/img/letter/2.png'),
-    require('../../assets/img/kaxuwa.png'),
-    require('../../assets/sounds/2.m4a'),
-    false
-  ),
+//   new PlaylistItem(
+//     'Kha',
+//     require('../../assets/img/letter/2.png'),
+//     require('../../assets/img/character/kharayo.png'),
+//     require('../../assets/sounds/words/kha.m4a'),
+//     false
+//   ),
+//   new PlaylistItem(
+//     'Ga',
+//     require('../../assets/img/letter/3.png'),
+//     require('../../assets/img/character/cow.png'),
+//     require('../../assets/sounds/words/Ga.m4a'),
+//     false
+//   ),
+//   new PlaylistItem(
+//     'Gha',
+//     require('../../assets/img/letter/4.png'),
+//     require('../../assets/img/character/house.png'),
+//     require('../../assets/sounds/2.m4a'),
+//     false
+//   ),
+//   new PlaylistItem(
+//     'Iga',
+//     require('../../assets/img/letter/5.png'),
+//     require('../../assets/img/character/house.png'),
+//     require('../../assets/sounds/2.m4a'),
+//     false
+//   ),
   
  
-];
+// ];
 
 const ICON_PLAY_BUTTON = new Icon(require('../../assets/images/play_button.png'), 34, 51);
 const ICON_PAUSE_BUTTON = new Icon(require('../../assets/images/pause_button.png'), 34, 51);
@@ -61,19 +81,7 @@ const ICON_STOP_BUTTON = new Icon(require('../../assets/images/stop_button.png')
 const ICON_FORWARD_BUTTON = new Icon(require('../../assets/images/forward_button.png'), 33, 25);
 const ICON_BACK_BUTTON = new Icon(require('../../assets/images/back_button.png'), 33, 25);
 
-const ICON_LOOP_ALL_BUTTON = new Icon(require('../../assets/images/loop_all_button.png'), 77, 35);
-const ICON_LOOP_ONE_BUTTON = new Icon(require('../../assets/images/loop_one_button.png'), 77, 35);
 
-const ICON_MUTED_BUTTON = new Icon(require('../../assets/images/muted_button.png'), 67, 58);
-const ICON_UNMUTED_BUTTON = new Icon(require('../../assets/images/unmuted_button.png'), 67, 58);
-
-const ICON_TRACK_1 = new Icon(require('../../assets/images/track_1.png'), 166, 5);
-const ICON_THUMB_1 = new Icon(require('../../assets/images/thumb_1.png'), 18, 19);
-const ICON_THUMB_2 = new Icon(require('../../assets/images/thumb_2.png'), 15, 19);
-
-const LOOPING_TYPE_ALL = 0;
-const LOOPING_TYPE_ONE = 1;
-const LOOPING_TYPE_ICONS = { 0: ICON_LOOP_ALL_BUTTON, 1: ICON_LOOP_ONE_BUTTON };
 
 const { width: DEVICE_WIDTH, height: DEVICE_HEIGHT } = Dimensions.get('window');
 const BACKGROUND_COLOR = '#290123';
@@ -84,8 +92,9 @@ const BUFFERING_STRING = '...buffering...';
 const RATE_SCALE = 3.0;
 const VIDEO_CONTAINER_HEIGHT = DEVICE_HEIGHT * 2.0 / 5.0 - FONT_SIZE * 2;
 
-
+let sourc =[];
 export default class Learning extends React.Component {
+ 
   constructor(props) {
     super(props);
     this.index = 0;
@@ -93,13 +102,13 @@ export default class Learning extends React.Component {
     this.isSeeking = false;
     this.shouldPlayAtEndOfSeek = false;
     this.playbackInstance = null;
-
-   
+    
+    sourc = Object.keys(DataContain).map(val => DataContain[val]);
     this.state = {
       //showVideo: false,
       //playbackInstanceName: LOADING_STRING,
       //loopingType: LOOPING_TYPE_ONE,
-      muted: false,
+      //muted: false,
       playbackInstancePosition: null,
       playbackInstanceDuration: null,
       shouldPlay: false,
@@ -108,12 +117,17 @@ export default class Learning extends React.Component {
       isLoading: true,
       fontLoaded: false,
       shouldCorrectPitch: true,
-      volume: 1.0,
-      rate: 1.0,
-      fullscreen: false,
+      //volume: 1.0,
+      //rate: 1.0,
+      //fullscreen: false,
+      
     };
   }
-  
+
+  static navigationOptions = {
+    headerVisible: false,
+    header: null
+  };
 
   componentDidMount() {
     
@@ -140,14 +154,15 @@ export default class Learning extends React.Component {
       this.playbackInstance = null;
     }
 
-    const source =  PLAYLIST[this.index].uril;
+    const source =  sourc[this.index].uril;
+
     
     const initialStatus = {
       shouldPlay: false, //pause after ending and to make loop use playing as in documentation
       rate: this.state.rate,
       shouldCorrectPitch: this.state.shouldCorrectPitch,
-      volume: this.state.volume,
-      isMuted: this.state.muted,
+      //volume: this.state.volume,
+      //isMuted: this.state.muted,
       //isLooping: this.state.loopingType === LOOPING_TYPE_ONE,
       // // UNCOMMENT THIS TO TEST THE OLD androidImplementation:
       androidImplementation: 'MediaPlayer',
@@ -186,7 +201,7 @@ export default class Learning extends React.Component {
        
         //playbackInstanceName: PLAYLIST[this.index].fontpic,
         
-        showVideo: PLAYLIST[this.index].isVideo,
+        showVideo: sourc[this.index].isVideo,
         isLoading: false,
       });
     }
@@ -201,8 +216,8 @@ export default class Learning extends React.Component {
         isPlaying: status.isPlaying,
         isBuffering: status.isBuffering,
         rate: status.rate,
-        muted: status.isMuted,
-        volume: status.volume,
+        //muted: status.isMuted,
+        //volume: status.volume,
         // loopingType: status.isLooping ? LOOPING_TYPE_ONE : LOOPING_TYPE_ALL,
         // shouldCorrectPitch: status.shouldCorrectPitch,
       });
@@ -235,7 +250,10 @@ export default class Learning extends React.Component {
   };
 
   _advanceIndex(forward) {
-    this.index = (this.index + (forward ? 1 : 0)) % PLAYLIST.length;
+    this.index = (this.index + (forward ? 1 : 0)) % sourc.length;
+}
+  _backwardIndex(backward){
+    this.index = (this.index - (backward ? 1 : 0)) % sourc.length;
 }
 
   async _updatePlaybackInstanceForIndex(playing) {
@@ -261,75 +279,26 @@ export default class Learning extends React.Component {
   };
 
   _onForwardPressed = () => {
+    if(this.index<sourc.length){
     if (this.playbackInstance != null) {
       this._advanceIndex(true);
       this._updatePlaybackInstanceForIndex(this.state.shouldPlay);
     }
+  }else{
+    this.index=0;
+  }
   };
 
   _onBackPressed = () => {
+    if(this.index>0){
     if (this.playbackInstance != null) {
-      this._advanceIndex(false);
+      this._backwardIndex(true);
       this._updatePlaybackInstanceForIndex(this.state.shouldPlay);
     }
+  }else{
+    this.index=0;
+  }
   };
-
-  // _onMutePressed = () => {
-  //   if (this.playbackInstance != null) {
-  //     this.playbackInstance.setIsMutedAsync(!this.state.muted);
-  //   }
-  // };
-
-  // _onLoopPressed = () => {
-  //   if (this.playbackInstance != null) {
-  //     this.playbackInstance.setIsLoopingAsync(this.state.loopingType !== LOOPING_TYPE_ONE);
-  //   }
-  // };
-
-  // _onVolumeSliderValueChange = value => {
-  //   if (this.playbackInstance != null) {
-  //     this.playbackInstance.setVolumeAsync(value);
-  //   }
-  // };
-
-  // _trySetRate = async (rate, shouldCorrectPitch) => {
-  //   if (this.playbackInstance != null) {
-  //     try {
-  //       await this.playbackInstance.setRateAsync(rate, shouldCorrectPitch);
-  //     } catch (error) {
-  //       // Rate changing could not be performed, possibly because the client's Android API is too old.
-  //     }
-  //   }
-  // };
-
-  // _getMMSSFromMillis(millis) {
-  //   const totalSeconds = millis / 1000;
-  //   const seconds = Math.floor(totalSeconds % 60);
-  //   const minutes = Math.floor(totalSeconds / 60);
-
-  //   const padWithZero = number => {
-  //     const string = number.toString();
-  //     if (number < 10) {
-  //       return '0' + string;
-  //     }
-  //     return string;
-  //   };
-  //   return padWithZero(minutes) + ':' + padWithZero(seconds);
-  // }
-
-  // _getTimestamp() {
-  //   if (
-  //     this.playbackInstance != null &&
-  //     this.state.playbackInstancePosition != null &&
-  //     this.state.playbackInstanceDuration != null
-  //   ) {
-  //     return `${this._getMMSSFromMillis(
-  //       this.state.playbackInstancePosition
-  //     )} / ${this._getMMSSFromMillis(this.state.playbackInstanceDuration)}`;
-  //   }
-  //   return '';
-  // }
-
  
  render()
    {
@@ -340,17 +309,30 @@ export default class Learning extends React.Component {
         <View />
         <View style={styles.mycontainer}>
         <View style={styles.questionView}>
+        <TouchableHighlight
+            underlayColor={BACKGROUND_COLOR}
+            style={styles.wrapper}
+            onPress={this._onPlayPausePressed}
+            disabled={this.state.isLoading}>
             <Image 
-              source={PLAYLIST[this.index].fontpic}
+              source={sourc[this.index].fontpic}
               style={{
               width: DEVICE_WIDTH/4,
               height: DEVICE_HEIGHT/4,
               flex: 1,
               resizeMode: "contain",
               paddingTop: 50
-            }}
-            />
-          <TouchableHighlight
+            }}/>
+            </TouchableHighlight>  
+             <TouchableHighlight
+            underlayColor={BACKGROUND_COLOR}
+            style={styles.wrapper}
+            onPress={this._onBackPressed}
+            disabled={this.state.isLoading}>
+            <Image style={styles.button} source={ICON_BACK_BUTTON.module} />
+          </TouchableHighlight>
+         
+          {/* <TouchableHighlight
             underlayColor={BACKGROUND_COLOR}
             style={styles.wrapper}
             onPress={this._onPlayPausePressed}
@@ -359,7 +341,7 @@ export default class Learning extends React.Component {
               style={styles.button}
               source={this.state.isPlaying ? ICON_PAUSE_BUTTON.module : ICON_PLAY_BUTTON.module}
             />
-          </TouchableHighlight>   
+          </TouchableHighlight>    */}
         </View>
         <View style={styles.ansView}>
           {/* <View style={styles.nameContainer}>
@@ -399,7 +381,7 @@ export default class Learning extends React.Component {
           ]}>
           <Image
               ref={this._mountVideo}
-              source={PLAYLIST[this.index].pic}
+              source={sourc[this.index].pic}
 
               style={{
               width: DEVICE_WIDTH/4,
@@ -443,6 +425,7 @@ export default class Learning extends React.Component {
             disabled={this.state.isLoading}>
             <Image style={styles.button} source={ICON_STOP_BUTTON.module} />
           </TouchableHighlight> */}
+         
           <TouchableHighlight
             underlayColor={BACKGROUND_COLOR}
             style={styles.wrapper}
@@ -526,7 +509,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'stretch',
-    backgroundColor:'white',
+   // backgroundColor:'white',
    
   },
   
@@ -557,7 +540,7 @@ const styles = StyleSheet.create({
     maxWidth: DEVICE_WIDTH / 2.0,
   },
   buttonsContainerMiddleRow: {
-    maxHeight: ICON_MUTED_BUTTON.height,
+    //maxHeight: ICON_MUTED_BUTTON.height,
     alignSelf: 'stretch',
     paddingRight: 20,
   },
@@ -573,7 +556,7 @@ const styles = StyleSheet.create({
   //   width: DEVICE_WIDTH / 2.0 - ICON_MUTED_BUTTON.width,
   // },
   buttonsContainerBottomRow: {
-    maxHeight: ICON_THUMB_1.height,
+    //maxHeight: ICON_THUMB_1.height,
     alignSelf: 'stretch',
     paddingRight: 20,
     paddingLeft: 20,
@@ -604,6 +587,7 @@ const styles = StyleSheet.create({
 
   },
   ansView:{
-   flex:1
+   flex:1,
+   //backgroundColor:'blue',
   }
 });
